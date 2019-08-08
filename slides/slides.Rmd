@@ -13,6 +13,33 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+
+## Personal Introduction
+
+\begin{columns}[T] % align columns
+\begin{column}{.48\textwidth}
+
+\begin{itemize}
+\setlength\itemsep{1em}
+
+\item R programmer for the Department of Biostatistics
+
+\item Write and mantain R packages for faculty and students
+
+\item Consult faculty and students on writing R packages
+
+\end{itemize}
+
+
+\end{column}%
+\hfill%
+\begin{column}{.48\textwidth}
+
+\includegraphics[width = 2in]{personal_picture.jpg}
+
+\end{column}%
+\end{columns}
+
 ## Rbootcamp Introduction
 
 Goals:
