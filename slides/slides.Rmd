@@ -1,0 +1,45 @@
+---
+title: "Rbootcamp"
+author: "Michael Kleinsasser"
+date: "8/8/2019"
+output: 
+    beamer_presentation:
+      theme: "CambridgeUS"
+      colortheme: "dolphin"
+      fonttheme: "structurebold"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Rbootcamp Introduction
+
+Goals:
+
+- How to learn R
+
+- Data manipulation with dplyr
+
+- Reproducible research
+
+- Simulation
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
