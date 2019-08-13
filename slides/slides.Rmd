@@ -44,9 +44,9 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Goals:
 
-- Basics of R on the cluster (non-interactive R)
 - R basics: syntax, common functions, etc., via Rstudio
 - R functions and for loops (functions and advanced control structures)
+- Basics of R on the cluster (non-interactive R)
 - Simulation analysis with comment on efficiency
 
 ## Materials
@@ -57,13 +57,163 @@ Goals:
 
 - R scripts of our examples
 
+## R Basics: Goals
+
+- Data types and functions
+\smallskip 
+  - Create object having data types
+  - Combine those into data structures
+  - Write basic R function
+
+\medskip
+
+- Learn parts of R most useful to statisticians
+\smallskip 
+  - How do most modeling functions work in R, and
+  - How to inspect structure and content of objects
+  
+## Assignment in R
+
+```{r asignment, echo = TRUE}
+# x gets the number 3.14
+x <- 3.14
+
+x     # print x
+
+# equivalently
+x = 3.14
+
+x     # print x
+```
+
+## R data types/structures
+
+Five fundamental data types
+
+- character, numeric, integer, logical, complex
+NOTE: insert table/picture of functions with examples
+
+Combine to form data structures
+
+- atomic vector (atomic - vector of single type)
+- list
+- matrix
+- data.frame
+- factor
+
+## R data types/structures
+
+Five fundamental data types
+
+- character, numeric, integer, logical, complex
+NOTE: insert table/picture of functions with information
+
+## R data types/structures
+
+Combine to form data structures
+
+- atomic vector (atomic - vector of single type)
+- list
+- matrix
+- data.frame
+- factor
+NOTE: insert table/picture of functions with information
+
+## Data types examples
+
+3 ways to create numeric vector:
+
+```{r , echo = TRUE}
+# empty numeric vector
+y1 <- numeric(6)
+y1     # print y1
+
+y2 <- vector(mode = "numeric", length = 6)
+y2     # print y2
+
+y3 <- c(5, 13.222, 2, 0.001, 77.4, 31.9)
+y3     # print y3
+```
+
+
+## Data structures examples
+
+\small Create a data.frame out of the following "class" data:
+
+- \small Has Master's (logical):  TRUE FALSE FALSE TRUE
+- \small GPA (numeric):           3.1  4.0   2.9   3.6
+- \small First Name (character):  Mike Dan   Sara  Karen
+
+```{r , echo = TRUE}
+# store data
+has_ms <- c(TRUE, FALSE, FALSE, TRUE)
+gpa <- c(3.1, 4.0, 2.9, 3.6)
+name <- c("Mike", "Dan", "Sara", "Karen")
+# Create data.frame
+dat <- data.frame(has_MS = has_ms, GPA = gpa, Name = name)
+dat    # print data.frame
+```
+
+## Inspect an object
+
+- Class() - what kind of object is it (high-level)?
+- typeof() - what is the data type (low-level)?
+- length() - how long is it?
+- attributes() - does it have meta-data?
+
+## R functions
+
+\small R function syntax:
+
+\small NAME <- function(ARG1, ARG2, ARG3) { \newline
+\small \hspace*{20pt} DO SOMETHING \newline
+\small \hspace*{20pt} STORE RESULT \newline
+\small \hspace*{20pt} return(RESULT) \newline
+\small }
+
+```{r , echo = TRUE}
+pow <- function(base, expon) { # power function
+  prod(rep(base, expon)) # base^(expon)
+}
+# Use power function
+pow(5, 2)
+pow(10, 3)
+```
+
+## Common R functions
+
+\small R has a huge collection of packages:
+
+\small  - 6,000+ packages for data analysis build (on CRAN alone)
+
+\small Example: lm (linear models)
+
+\small - Use ?lm to read help documentation 
+
+\includegraphics[width = 3in]{lm_help.PNG}
+
+## Fit linear model with lm
+
+Use Flick's slide setup
+
+## S3 classes
+
+- S3 is most common class type of R objects
+
+- Know how to inspect it:
+
+Insert example with lm() and inspect
+
 ## R on cluster (non-interactive R)
 
-- Why R on the cluster?
+\textbf{Cluster Computation}
 
-- Dan explains
+- Dan Barker danbarke at umich.edu
 
-- How to with example.
+\medskip
+
+- Cluster System Administrator
+
 
 ## R workflow for statistical analysis
 
