@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Personal Introduction
+## Mike's Personal Introduction
 
 \begin{columns}[T] % align columns
 \begin{column}{.48\textwidth}
@@ -44,19 +44,50 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Goals:
 
-- How to learn R
+- Basics of R on the cluster (non-interactive R)
+- R basics: syntax, common functions, etc., via Rstudio
+- R functions and for loops (functions and advanced control structures)
+- Simulation analysis with comment on efficiency
 
-- Data manipulation with dplyr
+## Materials
 
-- Reproducible research
+- All bootcamp materials online at https://github.com/umich-biostatistcs/Rbootcamp
 
-- Simulation
+- Handouts for each topic with examples to work through
 
-## Slide with Bullets
+- R scripts of our examples
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+## R on cluster (non-interactive R)
+
+- Why R on the cluster?
+
+- Dan explains
+
+- How to with example.
+
+## R workflow for statistical analysis
+
+\begin{columns}[T] % align columns
+\begin{column}{.36\textwidth}
+
+\begin{itemize}
+\setlength\itemsep{1em}
+
+\item Bootcamps throughout semester on each area
+
+
+\end{itemize}
+
+
+\end{column}%
+\hfill%
+\begin{column}{.62\textwidth}
+
+\includegraphics[width = 3in]{analysis_in_r (2).png}
+
+\end{column}%
+\end{columns}
+
 
 ## Slide with R Output
 
