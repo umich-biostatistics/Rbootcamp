@@ -46,7 +46,7 @@ Goals:
 
 - R basics: syntax, common functions, etc., via Rstudio
 - R functions and for loops (functions and advanced control structures)
-- Basics of R on the cluster (non-interactive R)
+- Basics of R on the cluster (non-interactive R using BATCH scripts)
 - Simulation analysis with comment on efficiency
 
 ## Materials
@@ -56,6 +56,31 @@ Goals:
 - Handouts for each topic with examples to work through
 
 - R scripts of our examples
+
+## Setup
+
+Go to Rstudio cloud to follow along:
+
+- Enter username, etc. for free account
+
+- Follow along by typing commands in my slides
+
+- If you have Rstudio/R, open that
+
+- Recommended: Install R/Rstudio for days 2, 3
+
+## R Basics: Big Picture
+
+ - R is a sophisticated calculator for statistics
+
+Chambers (2016) Extending R:
+
+ - Everything that exists in R is an object
+ - Everything that happens in R is a function call
+ 
+Obtain a basic working knowledge of R objects and functions, 
+
+ - Google the rest
 
 ## R Basics: Goals
 
@@ -72,6 +97,20 @@ Goals:
   - How do most modeling functions work in R, and
   - How to inspect structure and content of objects
   
+  
+## Use R as a calculator
+
+Standard operations: 
+
+```{r , echo = TRUE}
+# multiply *, divide /, add + subtract
+18056.983 - 1005.118 + 22.53
+
+( (pi - 3.14) / (3.14) )  * 100
+```
+
+\includegraphics[width = 2in]{calculator.JPG}
+
 ## Assignment in R
 
 ```{r asignment, echo = TRUE}
@@ -192,17 +231,164 @@ pow(10, 3)
 
 \includegraphics[width = 3in]{lm_help.PNG}
 
-## Fit linear model with lm
+## Fit a linear model with lm
 
-Use Flick's slide setup
+- Use built-in data set ToothGrowth
 
-## S3 classes
+- ?ToothGrowth for help:
 
-- S3 is most common class type of R objects
+\includegraphics[width = 3in]{quesToothGrowth.JPG}
 
-- Know how to inspect it:
+## View the data
 
-Insert example with lm() and inspect
+\small View data in new window:
+```{r, echo = TRUE,eval=FALSE}
+View(ToothGrowth)
+```
+
+\small Or use head to view only first 6 rows:
+\tiny
+```{r, echo = TRUE}
+head(ToothGrowth)
+```
+
+\small How big is the data?
+\tiny
+```{r, echo = TRUE}
+dim(ToothGrowth)
+```
+
+
+## Using lm() function for linear models
+Call lm on the data and formula, store result "lm" object:
+```{r, echo = TRUE, eval = TRUE}
+tooth_fit = lm(formula = len ~ supp + dose, 
+               data = ToothGrowth)
+```
+
+Formulas in R:
+```{r, echo = TRUE, eval = FALSE}
+len ~      # Response column name, ~ for "="
+  supp +   # First predictor name + for "+"
+  dose     # second predictor name
+```
+
+Many R functions use the formula argument.
+
+## Getting detailed information
+
+\small
+Basic "print" of model:
+\tiny
+```{r, echo = TRUE, eval = TRUE}
+print(tooth_fit)     # equivalent to tooth_fit
+```
+\small
+Detailed summary:
+\tiny
+```{r, echo = TRUE, eval = TRUE}
+summary(tooth_fit)
+```
+
+## Understanding R classes
+
+- What is this thing?
+```{r, echo = TRUE, eval = FALSE}
+class(tooth_fit)
+```
+- What are the methods for this object?
+```{r, echo = TRUE, eval = FALSE}
+methods(class = "lm")
+```
+- What is its structure? (i.e., what's in it)
+```{r, echo = TRUE, eval = FALSE}
+str(tooth_fit)
+```
+
+## Understanding R classes
+
+- What is this thing?
+```{r, echo = TRUE, eval = TRUE}
+class(tooth_fit)
+```
+
+## Understanding R classes
+\small
+- What are the methods for this object?
+```{r, echo = TRUE, eval = TRUE}
+methods(class = "lm")
+```
+
+## Understanding R classes
+
+\tiny
+- What is its structure? (i.e., what's in it)
+```{r, echo = TRUE, eval = TRUE}
+str(tooth_fit)
+```
+
+## Understanding R classes
+
+- Pull something out of the "lm" fit object:
+
+\tiny
+```{r, echo = TRUE, eval = TRUE}
+tooth_fit$fitted.values        # y_hat's for the linear model
+```
+
+## Extracting data from model objects
+
+Some generic extraction methods: 
+
+```{r, echo = TRUE, eval = FALSE}
+coef(tooth_fit)            # model coefficients
+
+coef(summary(tooth_fit))   # adds test statistics, p-values
+
+vcov(tooth_fit)            # variance/covariance matrix
+```
+
+Note: depending on implementation, these may not be available
+- Check methods with "methods(object)" before attempting
+
+## Extracting data from model objects (in detail)
+
+Extract coefficients, test stats, and p-values
+```{r, echo = TRUE, eval = TRUE}
+coef(summary(tooth_fit))   # adds test statistics, p-values
+```
+
+
+## Predict new values
+
+- predict() function is generic and works with many models
+
+- Pass in a new data.frame with the same column names:
+
+```{r, echo = TRUE, eval = TRUE}
+to_predict = data.frame(dose = 0.5, supp = "VC")
+```
+
+```{r, echo = TRUE, eval = TRUE}
+predict(tooth_fit, newdata = to_predict)
+```
+
+
+## Predict new values (example 2)
+
+- predict() function is generic and works with many models
+
+- Pass in a new data.frame with the same column names:
+
+\small
+```{r, echo = TRUE, eval = TRUE}
+to_predict = data.frame(dose = seq(0,1,0.1), supp = "OJ")
+```
+
+```{r, echo = TRUE, eval = TRUE}
+predict(tooth_fit, newdata = to_predict)
+```
+
 
 ## R on cluster (non-interactive R)
 
@@ -233,21 +419,64 @@ Insert example with lm() and inspect
 \hfill%
 \begin{column}{.62\textwidth}
 
-\includegraphics[width = 3in]{analysis_in_r (2).png}
+\includegraphics[width = 3in]{analysis_in_r2.png}
 
 \end{column}%
 \end{columns}
 
+## Advanced control structures
 
-## Slide with R Output
+Common misconception: "loops in R are slow"
 
-```{r cars, echo = TRUE}
-summary(cars)
+Explain
+
+## Loops: often not necessary
+
+ - Many R functions are "vectorized" (vector in, vector out)
+
+ - While most other languages require loops, R does not:
+ 
+```{r, echo = TRUE, eval = TRUE}
+a = c(5, 2, 4, 12, 1)
+b = c(2, 0, 3, -1, 2)
+
+a + b     # vector + vector = vector
 ```
 
-## Slide with Plot
+Takehome: When possible, operate on vectors and matrices, don't loop over each 
+row/position index
 
-```{r pressure}
-plot(pressure)
-```
+## Problem: not all functions are vectorized
 
+- Some functions, like read.table() for reading a table of data into R, are 
+not vectorized
+
+- But what if we have a list of files to read in? "data1.txt", "data2.txt",
+"data3.txt", ..., "data50.txt"
+
+
+
+## Simulation
+
+## Simulate lm 
+
+Need to come up with some question to answer.
+
+## Bootstrap lm results
+
+
+
+## Useful R packages
+
+- ggplot2 - Best package for plotting data
+  - getting started: 
+
+- dplyr - Best package for manipulating/processing data
+  - getting started:
+  
+  
+## Future bootcamps 
+
+- dplyr: date ____
+
+- ggplot2: date ____
