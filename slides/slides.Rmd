@@ -454,9 +454,149 @@ not vectorized
 - But what if we have a list of files to read in? "data1.txt", "data2.txt",
 "data3.txt", ..., "data50.txt"
 
+```{r, echo = TRUE, eval = TRUE, results='hide'}
+   # the 50 data set names
+file_names = paste0("data", 1:50, ".txt")  
+```
 
+Attempt it, will cause error:
+```{r, echo = TRUE, eval = FALSE}
+read.table(file_names)  # error!
+```
+
+
+## map() from purrr package to avoid loop
+
+- map() allows you to apply a function to each element of a vector
+
+- faster, easier to read than a loop
+
+```{r, echo = TRUE, eval = FALSE}
+read.table(file_names)  # error!
+```
+
+```{r, echo = TRUE, eval = FALSE}
+    # list of 50 data sets
+my_dat_list = map(file_names, read.table)
+    # results from reading data1.txt
+my_dat_list[[1]]     
+    # results from reading data50.txt
+my_dat_list[[50]]       
+```
+
+## Create your own functions for map
+
+Generate random samples from a Normal with different variances
+
+```{r, echo = TRUE, eval = FALSE}
+draws = map(2:20, function(x) rnorm(25, mean=0, sd=x))
+# returns a list with vectors of draws
+
+# first vector of draws:
+draws[[1]]
+
+# last vector of draws:
+draws[[19]]
+```
+
+## Create your own functions for map
+
+Now, estimate the standard error:
+
+```{r, echo = TRUE, eval = FALSE}
+map(draws, sd)  # sd() is standard deviation in R
+map_dbl(draws, sd) # numeric vector
+```
+
+## For loop vs map() version
+
+- Standard for loop:
+
+```{r, echo = TRUE, eval = FALSE}
+
+```
+
+- map():
+
+```{r, echo = TRUE, eval = FALSE}
+
+```
+
+
+## Sometimes loops are required
+
+Sometime you just need loops:
+
+- Growth model, new values depend on previous values
+
+```{r, echo = TRUE, eval = FALSE}
+N = 20
+for (i in 2:30) {
+  f = rpois(1, 0.15*N[i-1])   # births
+  d = rbinom(1, N[i-1], 0.1)  # deaths
+  N[i] = N[i-1] + f - d
+}
+
+plot(seq_along(N), N)
+```
+
+Show the plot!
+
+## Problem: Growing object is slow
+
+```{r, echo = TRUE, eval = FALSE}
+N = 20
+for (i in 2:30) {
+  f = rpois(1, 0.15*N[i-1])   # births
+  d = rbinom(1, N[i-1], 0.1)  # deaths
+  N[i] = N[i-1] + f - d
+}
+
+plot(seq_along(N), N)
+```
+
+- Our growth model loop is slow because we are growing a vector at each iteration
+
+- Solution pre-allocate vector (or any data type), then fill with loop
+
+## Efficient memory usage 
+
+Improved code:
+
+```{r, echo = TRUE, eval = FALSE}
+# Pre-allocate to correct size
+N = vector(mode = "numeric", length = 30)
+N[1] = 20
+for (i in 2:30) {
+  f = rpois(1, 0.15*N[i-1])   # births
+  d = rbinom(1, N[i-1], 0.1)  # deaths
+  N[i] = N[i-1] + f - d
+}
+
+plot(seq_along(N), N)
+```
+
+
+## overview of loops
+
+- Although slow at times, writing code is a trade-off between time consumed by the programmer and time gained with efficient code
+
+- Most times, loops are fast (enough) and convenient
+
+- Strategy: Write a loop, then if slow, re-write
+
+- Use vectorized functions whenever possible
+
+- Map when function is not vectorized
+  - Avoids the need to track indexes
+  - Does the pre-allocation for you
+
+- If you use loops, avoid growing lists/collections/data.frames
+  - pre-allocate memory
 
 ## Simulation
+
+
 
 ## Simulate lm 
 
