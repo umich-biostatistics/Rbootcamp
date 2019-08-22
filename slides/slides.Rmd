@@ -26,7 +26,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 \item Write and mantain R packages for faculty and students
 
-\item Consult faculty and students on writing R packages
+\item Consult faculty and students on writing R packages, optimization
 
 \end{itemize}
 
@@ -39,6 +39,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 \end{column}%
 \end{columns}
+
 
 ## Rbootcamp Introduction
 
@@ -53,9 +54,11 @@ Goals:
 
 - All bootcamp materials online at https://github.com/umich-biostatistcs/Rbootcamp
 
-- Handouts for each topic with examples to work through
+  - Handouts for each topic with examples to work through
 
-- R scripts of our examples
+  - R scripts of our examples
+
+- Go to link and download zip archive, extract
 
 ## Setup
 
@@ -69,6 +72,8 @@ Go to Rstudio cloud to follow along:
 
 - Recommended: Install R/Rstudio for days 2, 3
 
+- See course materials for download instructions
+
 ## R Basics: Big Picture
 
  - R is a sophisticated calculator for statistics
@@ -81,6 +86,10 @@ Chambers (2016) Extending R:
 Obtain a basic working knowledge of R objects and functions, 
 
  - Google the rest
+ 
+## R Basics: a basic schematic view
+
+\includegraphics[width = 4.5in]{R_schemtic.JPG}
 
 ## R Basics: Goals
 
@@ -97,13 +106,19 @@ Obtain a basic working knowledge of R objects and functions,
   - How do most modeling functions work in R, and
   - How to inspect structure and content of objects
   
+\medskip
+
+- Apply knowledge to simulation
+\smallskip 
+  - How do most modeling functions work in R, and
+  - How to inspect structure and content of objects
   
 ## Use R as a calculator
 
 Standard operations: 
 
 ```{r , echo = TRUE}
-# multiply *, divide /, add + subtract
+# multiply *, divide /, add + subtract - 
 18056.983 - 1005.118 + 22.53
 
 ( (pi - 3.14) / (3.14) )  * 100
@@ -111,52 +126,240 @@ Standard operations:
 
 \includegraphics[width = 2in]{calculator.JPG}
 
-## Assignment in R
+
+## Operators: arithmetic and logical
+
+\begin{columns}[T] % align columns
+\begin{column}{.48\textwidth}
+
+\begin{table}
+\begin{tabular}{l | l}
+Operator & Description \\
+\hline \hline
+$+$ & addition \\ 
+$-$ & subtraction \\ 
+$/$ & division \\ 
+\string^ & exponential \\ 
+\%\% & modulus (x mod y) \\ 
+\%/\% & integer division
+\end{tabular}
+\caption{Arithmetic Operators}
+\end{table}
+
+
+\end{column}%
+\hfill%
+\begin{column}{.48\textwidth}
+
+\begin{table}
+\begin{tabular}{l | l}
+Operator & Description \\
+\hline \hline
+< & less than \\ 
+<= & less than or equal \\
+\string> & greater than \\
+\string>= & greater than or equal \\
+== & exactly equal to \\
+!= & not equal to \\
+!x & not x (x logical) \\
+x|y & x OR y \\
+x\&y & x AND y \\
+isTRUE(x) & is x TRUE 
+\end{tabular}
+\caption{Logical Operators}
+\end{table}
+
+\end{column}%
+\end{columns}
+
+
+## Operators: an example
+
+Test if these two expressions are equivalent in R:
+
+```{r}
+# Expression 1:
+
+
+# Expression 2: 
+
+
+# test equality:
+
+```
+
+## Operators: an example
+
+Test if these two expressions are equivalent in R:
+
+```{r}
+
+```
+
+Convert the following expression to R code:
+
+```{r}
+
+```
+
+
+
+## Create, list, delete objects
+
+Create object with "assign" operator
+
+ - arrow then minus sign  <-
+ - single equal sign      =
 
 ```{r asignment, echo = TRUE}
 # x gets the number 3.14
 x <- 3.14
-
 x     # print x
 
 # equivalently
 x = 3.14
-
 x     # print x
 ```
 
-## R data types/structures
 
-Five fundamental data types
+## Create, list, delete objects
 
-- character, numeric, integer, logical, complex
-NOTE: insert table/picture of functions with examples
+Objects we create are stored in memory, e.g.:
 
-Combine to form data structures
+```{r, echo = TRUE}
+name = "Carmen"
+n1 = 10
+n2 = 100
+m = 0.5
+```
 
-- atomic vector (atomic - vector of single type)
-- list
-- matrix
-- data.frame
-- factor
 
-## R data types/structures
+Use ls() function to list all objects in memory:
 
-Five fundamental data types
+```{r, echo = TRUE}
+ls()
+```
 
-- character, numeric, integer, logical, complex
-NOTE: insert table/picture of functions with information
+Notice: I created x before, it's still in memory.
 
-## R data types/structures
+## Create, list, delete objects
 
-Combine to form data structures
+Use ls() function to list all objects in memory:
 
-- atomic vector (atomic - vector of single type)
-- list
-- matrix
-- data.frame
-- factor
-NOTE: insert table/picture of functions with information
+```{r, echo = TRUE}
+ls()
+```
+
+The function ls.str() displays some details about objects in memory:
+
+```{r,echo=TRUE}
+ls.str()
+```
+
+## Create, list, delete objects
+
+To delete objects in memory, use rm() function
+
+```{r, echo = TRUE}
+rm(x) # delets object named x
+ls()  # which objects remain in memory?
+rm(m, n2, name) # remove multiple objects
+ls()
+rm(list = ls()) # remove everything from memory
+ls()
+```
+
+## The on-line help
+
+R has structured help pages providing "how-to"
+
+ - \textbf{Description:} what function does
+ - \textbf{Usage:} name with arguments and options
+ - \textbf{Arguments:} how each argument should be structured
+ - \textbf{Details:} more detailed description
+ - \textbf{Value:} How the output is structured/ what it contains
+ - \textbf{Examples:} examples of the function in use
+ 
+```{r, echo = TRUE, eval = FALSE}
+?rm          # help documentation for rm function
+help("rm")   # alternately
+```
+
+## The on-line help
+
+\includegraphics[width = 4in]{help_doc.JPG}
+
+## Other R help
+
+Many package writers create Vignettes and READMEs
+
+How to view vignettes?
+
+```{r, echo = TRUE, eval = FALSE}
+vignette(all = TRUE) # list vignettes for installed packages
+vignette(all = FALSE)  # vignettes from attached packages
+```
+
+
+How to view READMEs?
+
+Other help...
+
+## Objects in R
+
+Objects (data, model output, functions)
+
+ - Characterized by their \textbf{names} and \textbf{content}
+ 
+ - attributes - specify the kind of data represented
+    - e.g. mode, length
+    
+```{r, echo=TRUE}
+x = 1
+mode(x)
+length(x)
+```
+
+
+## Basic data "modes" in R
+
+The mode is the basic type of the elements of an object
+
+The four main modes:
+
+- numeric, comes in two flavors: integer, numeric
+- character
+- logical 
+- complex
+
+\small
+```{r, echo=TRUE}
+num = 15.533; name = "Mike"; isStudent = TRUE
+```
+
+```{r, echo=TRUE}
+mode(num); mode(name); mode(isStudent)
+```
+
+
+## Atomic vectors
+
+Fundamental data structure in R: 
+
+- atomic vector - vector in which every element is of same mode
+
+To create an atomic vector, use c() function:
+
+```{r, echo=TRUE}
+c(3.145, 2.18, 9.98e3, 0.05)
+```
+
+Example: create empty character vector of length 3 and story your full name
+
+```{r, echo=TRUE}
+vector(mode = "character", length = 3)
+```
+
 
 ## Data types examples
 
@@ -175,7 +378,105 @@ y3     # print y3
 ```
 
 
-## Data structures examples
+## Objects in R: NA
+
+NA means "Not Available" and it denotes missing data
+
+(Insert after atomic vectors introduced)
+\small
+```{r, echo=TRUE}
+c(3, 5, 9, NA, 18, 25, NA)  
+```
+
+
+## R data types/structures
+
+Four fundamental data types:
+
+- character, numeric (numeric or integer), logical, complex
+
+Combine to form data structures
+
+- atomic vector (atomic - vector of single type)
+- list
+- matrix
+- data.frame
+- factor
+
+We will focus on matrices and data.frames
+
+## Matrices
+
+Matrices are the natural extension of atomic vectors into 2 dimensions
+
+- any mode can be used, but numeric most common:
+
+Syntax:
+
+```{r, echo = TRUE,eval=FALSE}
+m = matrix(data, nrow, ncol, byrow, dimnames)
+```
+
+- \textbf{data} is the input vector which becomes the data elements of the matrix
+- \textbf{nrow, ncol} is the number of rows/columns to be created
+- \textbf{byrow} is a logical clue. If TRUE then the input vector elements are arranged by row
+- \textbf{dimnames} is the names assigned to the rows and columns
+
+## Matrix examples:
+
+Identity matrix:
+```{r,echo=TRUE, eval=TRUE}
+dat = c(1,0,0,0,1,0,0,0,1)  # data
+iden = matrix(data = dat, nrow = 3, byrow = T)
+iden  # print matrix
+```
+
+Easier:
+```{r, echo=TRUE, eval=FALSE}
+iden = diag(rep(1,3))
+iden
+```
+
+## access elements of a matrix
+
+- single brackets used to access elements
+
+Access individual elements:
+
+```{r, echo=TRUE}
+# 2x5 matrix of numbers 1 to 10
+P = matrix(data = 1:10, nrow = 2)  
+P[1,3] # row 1, column 3
+P[nrow(P),ncol(P)] # row 2, column 5 (bottom right position)
+```
+
+Access entire rows/columns:
+
+```{r, echo=TRUE}
+P[,3];
+```
+
+## The data.frame
+
+The \textbf{data.frame} is the most common way to store and work with data in R
+
+ - Not surprising: they are designed for this purpose
+
+ - Most modeling functions work on data.frames
+
+Composed of a list of equal length atomic vectors (can be of any type)
+
+Example: 
+
+\small The following are data on students in the class:
+
+- \small Has Master's (logical):  TRUE FALSE FALSE TRUE
+- \small GPA (numeric):           3.1  4.0   2.9   3.6
+- \small First Name (character):  Mike Dan   Sara  Karen
+
+Convert to three atomic vectors of appropriate type.
+
+## data.frame examples
 
 \small Create a data.frame out of the following "class" data:
 
@@ -193,12 +494,84 @@ dat <- data.frame(has_MS = has_ms, GPA = gpa, Name = name)
 dat    # print data.frame
 ```
 
+
+## access elements of a data.frame
+
+Each vector of a data.frame contains the values of a variable
+
+Access each vector with the dollar sign $
+
+Ex: Extract the GPA column and print it
+
+```{r, echo=TRUE, eval=TRUE}
+dat$GPA
+```
+
+Another example: ToothGrowth data.
+
+```{r, echo=TRUE}
+ToothGrowth$len
+```
+
+
+## data.frame
+
+Preview head (first few rows) of data.frame:
+
+```{r, echo=TRUE, eval=TRUE}
+head(ToothGrowth)
+```
+
+
+View tail of data.frame:
+
+```{r, echo=TRUE, eval=FALSE}
+tail(dat)
+```
+
+View entire data.frame in new window:
+
+```{r, echo=TRUE, eval=FALSE}
+View(ToothGrowth)
+```
+
+
 ## Inspect an object
 
-- Class() - what kind of object is it (high-level)?
+- class() - what kind of object is it (high-level)?
+\bigskip
 - typeof() - what is the data type (low-level)?
+\bigskip
 - length() - how long is it?
+\bigskip
 - attributes() - does it have meta-data?
+\bigskip
+
+## Inspect an object
+
+- class() - what kind of object is it (high-level)?
+```{r, echo=TRUE}
+class(ToothGrowth)
+```
+\bigskip
+- typeof() - what is the data type (low-level)?
+```{r, echo=TRUE}
+typeof(ToothGrowth$supp)
+```
+
+
+## Inspect an object
+
+- length() - how long is it?
+```{r, echo=TRUE}
+length(ToothGrowth$dose)
+```
+\medskip
+- attributes() - does it have meta-data?
+```{r, echo=TRUE}
+attributes(ToothGrowth)
+```
+
 
 ## R functions
 
@@ -245,13 +618,13 @@ pow(10, 3)
 ```{r, echo = TRUE,eval=FALSE}
 View(ToothGrowth)
 ```
-
+\bigskip
 \small Or use head to view only first 6 rows:
 \tiny
 ```{r, echo = TRUE}
 head(ToothGrowth)
 ```
-
+\bigskip
 \small How big is the data?
 \tiny
 ```{r, echo = TRUE}
@@ -593,10 +966,56 @@ plot(seq_along(N), N)
 
 - If you use loops, avoid growing lists/collections/data.frames
   - pre-allocate memory
+  
+  
 
 ## Simulation
 
+Many built-in distribution functions in R:
 
+They have prefix r, q, p, ... for random, ...
+
+- probability density: d___
+- cumulative probability density p____
+- quantile: q___
+- random draw: r____
+
+Example:
+uniform  unif
+
+## Simulation
+
+\begin{table}
+\begin{tabular}{l | l}
+distribution & function \\
+\hline \hline
+Normal & rnorm(n, mean=0, sd=1) \\ 
+exponential & rexp(n, rate=1) \\ 
+uniform & runif(n, min=0, max=1) \\
+gamma & rgamma(n, shape, scale=1) \\ 
+poisson & rpois(n, lambda) \\
+Weibull & rweibull(n, shape, scale=1) \\
+Cauchy & rcauchy(n, location=0, scale=1) \\
+beta & rbeta(n, shape1, shape2) \\
+Student t & rt(n, df) \\
+binomial & rbinom(n, size, prob) \\
+logistic & rlogis(n, location=0, scale=1)
+\end{tabular}
+\caption{Built-in distributions}
+\end{table}
+
+
+## Simulation: Confidence intervals
+
+Open simulations.R script in course files
+
+\bigskip
+
+Exercise: Is the coverage rate of confidence intervals for the mean accurate?
+
+ - Given conditions similar to ours, does our method for generating confidence intervals capture the true value 95% of the time?
+
+\includegraphics[width = 3in]{CI_coverage_example.JPG}
 
 ## Simulate lm 
 
