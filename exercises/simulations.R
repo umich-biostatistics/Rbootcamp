@@ -54,7 +54,8 @@ results = as.data.frame(results)
 results = results[order(results$lower),]
 results$id = as.factor(1:n.sim)
 ggplot(data = results) + geom_segment(aes(x=lower, y=id, xend=upper, yend=id)) + 
-  geom_vline(xintercept = mu)
+  geom_vline(xintercept = mu) + theme(axis.ticks.y = element_blank(),
+                                      axis.text.y = element_blank())
 
 
 ## How many confidence intervals miss the target?
@@ -70,6 +71,15 @@ bad.upper = sum(mu > results$upper)
 
 ## Play around with setting n to different values. How does coverage change?
 
+
+## Replace the for loop with replicate:
+
+for (i in 1:n.sim) {
+  results[i,] = sim.ci(mu=mu, sig=sig, n=n)
+}
+
+## is equivalent to
+my.sims = t(replicate(100, sim.ci(mu=mu, sig=sig, n=n)))
 
 
 # Extra confidence interval examples:

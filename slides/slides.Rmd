@@ -177,7 +177,7 @@ isTRUE(x) & is x TRUE
 
 Test if these two expressions are equivalent in R:
 
-```{r}
+```{r, echo=TRUE}
 # Expression 1:
 
 
@@ -188,18 +188,20 @@ Test if these two expressions are equivalent in R:
 
 ```
 
-## Operators: an example
+## Operators and vectorization
 
-Test if these two expressions are equivalent in R:
+Arithmetic/logical operators are \textbf{vectorized}:
 
-```{r}
-
+Given these vectors:
+```{r, eval=TRUE}
+x = c(1,2,3); y = c(4,8,16) #; emp = c(T,F,F,T); ret = c(T,T,T,F)
+x; y; # emp; ret
 ```
 
-Convert the following expression to R code:
-
-```{r}
-
+```{r, echo=TRUE}
+x + y
+x * y
+y <= x
 ```
 
 
@@ -968,20 +970,45 @@ plot(seq_along(N), N)
   - pre-allocate memory
   
   
+## Simulation Basics
 
-## Simulation
+Why simulate?
 
-Many built-in distribution functions in R:
+  - confirm model/method works by mimicking the real world
 
-They have prefix r, q, p, ... for random, ...
+Sampling in R from sets and distributions:
 
-- probability density: d___
-- cumulative probability density p____
-- quantile: q___
-- random draw: r____
+Simulate a coin toss experiment:
 
+  - toss a coin ten times, record what side it lands on each time
+  
+\small
+```{r, echo=TRUE}
+set.seed(7794)
+sample(c("H","T"), size = 10, replace = TRUE) # fair coin
+sample(c("H","T"), size = 10, replace = TRUE, 
+                         prob = c(0.6, 0.4)) # weighted coin
+```
+
+## Simulation Basics
+
+Sampling in R from distributions:
+
+ - d___(x) returns the density of a probability distribution for a discrete value of x
+ 
+ - p___(q) returns the cumulative density function (CDF) up to q
+ 
+ - q___(p) returns the quantile from a cumulative probability
+ 
+ - r___(n) returns a random deviate (a simulation of random draw) of size n
+
+\small
 Example:
-uniform  unif
+```{r, echo=TRUE}
+qnorm(0.025); dnorm(0)
+```
+
+?distributions for more information
 
 ## Simulation
 
@@ -989,21 +1016,56 @@ uniform  unif
 \begin{tabular}{l | l}
 distribution & function \\
 \hline \hline
-Normal & rnorm(n, mean=0, sd=1) \\ 
-exponential & rexp(n, rate=1) \\ 
-uniform & runif(n, min=0, max=1) \\
-gamma & rgamma(n, shape, scale=1) \\ 
-poisson & rpois(n, lambda) \\
-Weibull & rweibull(n, shape, scale=1) \\
-Cauchy & rcauchy(n, location=0, scale=1) \\
-beta & rbeta(n, shape1, shape2) \\
-Student t & rt(n, df) \\
-binomial & rbinom(n, size, prob) \\
-logistic & rlogis(n, location=0, scale=1)
+Normal & norm(n, mean=0, sd=1) \\ 
+exponential & exp(n, rate=1) \\ 
+uniform & unif(n, min=0, max=1) \\
+gamma & gamma(n, shape, scale=1) \\ 
+poisson & pois(n, lambda) \\
+Weibull & weibull(n, shape, scale=1) \\
+Cauchy & cauchy(n, location=0, scale=1) \\
+beta & beta(n, shape1, shape2) \\
+Student t & t(n, df) \\
+binomial & binom(n, size, prob) \\
+logistic & logis(n, location=0, scale=1)
 \end{tabular}
 \caption{Built-in distributions}
 \end{table}
 
+## Simulation: sample from probability distributions
+
+```{r, echo=TRUE, eval=FALSE}
+rnorm(6) # 6 standard normal deviates
+rnorm(10, mean=50, sd=19) # set mean and spread
+runif(10, min=0, max=1) # uniform distribution
+rpois(10, lambda=15) # Poisson 
+```
+\bigskip
+Cointoss reframed: toss coin 8 times using binomial distribution
+
+```{r, echo=TRUE, eval=FALSE}
+set.seed(7794)
+rbinom(8, size=1, p=0.5) # 8 coin tosses
+```
+
+## Some simple simulations 
+
+Problem: predict the number of girls in 400 births in a population where prob.
+of female birth is 48.8%
+
+```{r, echo=TRUE}
+#set.seed()
+n.girls = rbinom(n=1, size=400, prob=0.488)
+n.girls
+```
+
+ - Get a distribution of the number of female births when prob. = 0.488
+ 
+```{r, echo=TRUE, eval=FALSE}
+n.sims=1000
+n.girls=rbinom(n.sims,400,0.488)
+hist(n.girls)
+```
+ 
 
 ## Simulation: Confidence intervals
 
@@ -1017,9 +1079,34 @@ Exercise: Is the coverage rate of confidence intervals for the mean accurate?
 
 \includegraphics[width = 3in]{CI_coverage_example.JPG}
 
+## Replicate for repeating simulations
+
+Function to simulate the mean of 100 standard normal draws:
+
+```{r, echo=TRUE, eval=FALSE}
+sim.mean = function() { mean(rnorm(100)) }
+```
+\medskip
+The following for loop repeats the simulation 1,000 times:
+
+```{r, echo=TRUE, eval=FALSE}
+sims = vector(mode = "numeric", length = 1000L)
+for(i in 1:1000) { sims[i] = sim.mean() }
+```
+\medskip
+We can avoid the for loop with \textbf{replicate()}:
+
+```{r, echo=TRUE, eval=FALSE}
+sims = replicate(1000, sim.mean())
+```
+
+
 ## Simulate lm 
 
-Need to come up with some question to answer.
+Simulate a linear model with two predictors, and then use lm in R to see
+if we recovered the values
+
+Plot
 
 ## Bootstrap lm results
 
@@ -1027,9 +1114,16 @@ Need to come up with some question to answer.
 
 ## Useful R packages
 
+What about working with data and plotting in R?
+\medskip
+
+- Don't bother with base R, learn these:
+
+\medskip
 - ggplot2 - Best package for plotting data
   - getting started: 
-
+  
+\medskip
 - dplyr - Best package for manipulating/processing data
   - getting started:
   
