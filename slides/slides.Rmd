@@ -1,5 +1,5 @@
 ---
-title: "Rbootcamp"
+title: "Rbootcamp/Workshop"
 author: "Michael Kleinsasser"
 date: "8/8/2019"
 output: 
@@ -43,20 +43,22 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Rbootcamp Introduction
 
-Goals:
+Goals (roughly):
 
-- R basics: syntax, common functions, etc., via Rstudio
-- R functions and for loops (functions and advanced control structures)
-- Basics of R on the cluster (non-interactive R using BATCH scripts)
-- Simulation analysis with comment on efficiency
+ - Day 1: Setting up and using R interactively, syntax and data types, creating viewing and removing objects, on-line help, writing functions, how most statistical procedures are implemented in R
+ 
+ - Day 2: Non-interactive R and the cluster. How to write optimized code, including vectorization and loops, and introduction to data manipulation with dplyr, and visualization with ggplot2
+ 
+ - Day 3: Finally we combine our knowledge and apply it to a series of simulation problems
+
 
 ## Materials
 
 - All bootcamp materials online at https://github.com/umich-biostatistcs/Rbootcamp
 
-  - Handouts for each topic with examples to work through
+  - Handouts with examples to work through
 
-  - R scripts of our examples
+  - R scripts of our examples (.Rmd slides, .R scripts)
 
 - Go to link and download zip archive, extract
 
@@ -85,7 +87,7 @@ Chambers (2016) Extending R:
  
 Obtain a basic working knowledge of R objects and functions, 
 
- - Google the rest
+ - Google the rest!
  
 ## R Basics: a basic schematic view
 
@@ -110,8 +112,22 @@ Obtain a basic working knowledge of R objects and functions,
 
 - Apply knowledge to simulation
 \smallskip 
-  - How do most modeling functions work in R, and
-  - How to inspect structure and content of objects
+  - Set up, draw from various distributions
+  - Summarise, visualize
+  
+## Ways to run R
+
+Either "interactively" or "non-interactively"
+
+ - Interactive R: 
+ - For line by line code execution 
+ - Open the Rgui.exe or 
+ - Open Rstudio.exe (recommended) - integrated developement environment for R
+ 
+Non-interactively:
+
+ - For running entire scripts at once
+ - Desired for allocating large jobs on the cluster (return to later)
   
 ## Use R as a calculator
 
@@ -177,15 +193,16 @@ isTRUE(x) & is x TRUE
 
 Test if these two expressions are equivalent in R:
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, eval=FALSE}
+A = c(TRUE, TRUE, FALSE); B = c(FALSE, FALSE, TRUE)
 # Expression 1:
-
+A | B
 
 # Expression 2: 
-
+!(A == B)
 
 # test equality:
-
+all.equal(A | B, !(A == B))
 ```
 
 ## Operators and vectorization
@@ -317,7 +334,7 @@ Objects (data, model output, functions)
     - e.g. mode, length
     
 ```{r, echo=TRUE}
-x = 1
+x = 25
 mode(x)
 length(x)
 ```
@@ -384,10 +401,19 @@ y3     # print y3
 
 NA means "Not Available" and it denotes missing data
 
-(Insert after atomic vectors introduced)
 \small
 ```{r, echo=TRUE}
 c(3, 5, 9, NA, 18, 25, NA)  
+```
+
+\bigskip
+\normalsize
+Example: Store the vector above and remove the missing values.
+
+\small
+```{r, echo=TRUE}
+#incomplete.data = 
+#complete.data = complete.cases(complete.data)
 ```
 
 
@@ -764,6 +790,32 @@ to_predict = data.frame(dose = seq(0,1,0.1), supp = "OJ")
 predict(tooth_fit, newdata = to_predict)
 ```
 
+## Day 2
+
+ - Non-interactive R and the cluster (Instructed by Dan Barker)
+ 
+ \bigskip
+ 
+ - How to write optimized code, including vectorization and loops, and 
+ 
+ \bigskip
+ 
+ - introduction to data manipulation with dplyr, and visualization with ggplot2
+ 
+## Packages to install for today
+
+Run the following chunk to install packages:
+
+```{r, echo=TRUE, eval=FALSE}
+install.packages("tidyverse")
+```
+
+Load into memory:
+
+```{r, echo=TRUE, eval=FALSE}
+library(purrr)
+```
+
 
 ## R on cluster (non-interactive R)
 
@@ -776,7 +828,7 @@ predict(tooth_fit, newdata = to_predict)
 - Cluster System Administrator
 
 
-## R workflow for statistical analysis
+## Basic workflow for statistical analysis
 
 \begin{columns}[T] % align columns
 \begin{column}{.36\textwidth}
@@ -784,7 +836,9 @@ predict(tooth_fit, newdata = to_predict)
 \begin{itemize}
 \setlength\itemsep{1em}
 
-\item Bootcamps throughout semester on each area
+\item Workshops throughout semester on different areas
+
+\item Emphasis placed on tidyverse
 
 
 \end{itemize}
@@ -799,11 +853,33 @@ predict(tooth_fit, newdata = to_predict)
 \end{column}%
 \end{columns}
 
+## What is the tidyverse?
+
+ - collection of (very useful) R packages for doing "data science"
+ 
+ - ggplot2 - for plotting, visualizing data
+ 
+ - dplyr - for data manipulation/processing
+ 
+ - tidyr, readr (read data), purrr (better loops), tibble (improved data.frame), stringr, forcats
+ 
+ - Learn: R for Data Science, Grolemund and Wickham (free online)
+
 ## Advanced control structures
 
 Common misconception: "loops in R are slow"
 
-Explain
+ - Many commenters say loops in R are a bad idea,
+
+ - But, sometimes difficult (or impossible) to write vectorized code, or vectorized code consumes too much memory. 
+ 
+\bigskip
+ 
+ - We discuss:
+ 
+   - How to improve loops when they are necessary
+  
+   - Eliminate them when possible
 
 ## Loops: often not necessary
 
@@ -866,7 +942,7 @@ Generate random samples from a Normal with different variances
 ```{r, echo = TRUE, eval = FALSE}
 draws = map(2:20, function(x) rnorm(25, mean=0, sd=x))
 # returns a list with vectors of draws
-
+str(draws)
 # first vector of draws:
 draws[[1]]
 
@@ -880,6 +956,7 @@ Now, estimate the standard error:
 
 ```{r, echo = TRUE, eval = FALSE}
 map(draws, sd)  # sd() is standard deviation in R
+
 map_dbl(draws, sd) # numeric vector
 ```
 
@@ -888,15 +965,19 @@ map_dbl(draws, sd) # numeric vector
 - Standard for loop:
 
 ```{r, echo = TRUE, eval = FALSE}
-
+sdvs = 2:20; result.list = list(length = 19)
+for (i in 1:19) {
+  result.list[[i]] = rnorm(25, mean=0, sd=sdvs[i])
+}
 ```
 
 - map():
 
 ```{r, echo = TRUE, eval = FALSE}
-
+map(2:20, function(x) rnorm(25, mean=0, sd=x))
 ```
 
+Advice: If you're tracking indexes (like with the for loop), consider re-writing so you no longer have to depend on correct indexing
 
 ## Sometimes loops are required
 
@@ -915,16 +996,16 @@ for (i in 2:30) {
 plot(seq_along(N), N)
 ```
 
-Show the plot!
+Execute the code to see our simulated growth curve
 
-## Problem: Growing object is slow
+## Problem: Growing objects is slow
 
 ```{r, echo = TRUE, eval = FALSE}
 N = 20
 for (i in 2:30) {
   f = rpois(1, 0.15*N[i-1])   # births
   d = rbinom(1, N[i-1], 0.1)  # deaths
-  N[i] = N[i-1] + f - d
+  N[i] = N[i-1] + f - d       # alive
 }
 
 plot(seq_along(N), N)
@@ -945,20 +1026,19 @@ N[1] = 20
 for (i in 2:30) {
   f = rpois(1, 0.15*N[i-1])   # births
   d = rbinom(1, N[i-1], 0.1)  # deaths
-  N[i] = N[i-1] + f - d
+  N[i] = N[i-1] + f - d       # alive
 }
 
 plot(seq_along(N), N)
 ```
 
+ - In this simple example, does not make a difference
+ 
+ - With real-world, it will make a difference
 
 ## overview of loops
 
-- Although slow at times, writing code is a trade-off between time consumed by the programmer and time gained with efficient code
-
-- Most times, loops are fast (enough) and convenient
-
-- Strategy: Write a loop, then if slow, re-write
+- Do not do things inside a loop that can be done outside
 
 - Use vectorized functions whenever possible
 
@@ -970,6 +1050,502 @@ plot(seq_along(N), N)
   - pre-allocate memory
   
   
+## tidyverse
+
+\Large
+Brief introduction to programming with tidyverse
+
+\includegraphics[width = 3.5in]{tidyverse.png}
+
+## dplyr
+
+Motivation:
+
+ - Analysts spend a lot of time manipulating and summarizing data
+ 
+ - Base R provides many functions for this, BUT:
+   - the syntax is ugly
+   - the functions can be slow/inefficient
+   
+ - dplyr exists to make data manipulation easy to follow/correct/fast
+ 
+## Install and load dplyr
+
+ - ggplot is included in the tidyverse package. To load the tidyverse package, 
+ run 
+```{r, echo = TRUE, eval = TRUE, message=FALSE}
+library(tidyverse)
+```
+
+ - If you get the message "there is no package 'tidyverse' " you must install it first:
+ 
+```{r, echo = TRUE, eval = FALSE}
+install.packages("tidyverse")
+library(tidyverse) # now load the tidyverse package
+```
+
+## Sample data set
+
+ - We will be using a data set containing all out-bound flights from NYC in 2013
+ 
+ - Available as an R package
+ 
+```{r, echo = TRUE, eval = TRUE, message=FALSE}
+#install.packages("nycflights13")
+library(nycflights13)
+#View(flights)
+```
+
+## nycflights13 tables
+
+Multiple data sets in this "package" of data related to the NYCflights:
+
+\includegraphics[width = 3.5in]{nycflights13.JPG}
+
+## "flights" table 
+
+Preview the flights data: 
+\tiny
+```{r}
+flights
+```
+
+## dplyr verbs
+
+dplyr provides a cogent, systematic way to carry out most data manipulation tasks:
+
+These functions, called "verbs" are:
+
+ - filter() - keep rows matching desired properties
+ - select() - choose which columns you want to extract
+ - arrange() - sort rows
+ - mutate() - create new columns
+ - summarize() - collapse rows into summaries
+ - group_by() - operate on subsets of rows at a time
+ 
+
+## dplyr verb properties
+
+ - Always take data set as the first parameter
+ - Returns a new data object, never updates/replaces original
+ - Specify columns as unquotes strings (symbols)
+ - use "pipes" (%>%) to pass result of one call on to the next
+   - %>% operator passes the result of the left side to the first arg. on right
+   - a(b(c(x))) equals x %>% c() %>% b() %>% a()
+
+Example: 
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>%                 # data
+  filter(carrier == "AA")   # apply verb
+```
+
+## Filtering rows
+
+ - Find all flights to Detroit (DTW) in June (2013)
+ - Use filter() to complete the task
+ 
+```{r, echo=TRUE, eval=FALSE}
+flights %>%                 # data
+  filter(carrier == "AA" & month == 6)   # filter DTW as dest.
+```
+
+Equivalently:
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>%                 # data
+  filter(carrier == "AA") %>%  # filter DTW as dest.
+  filter(month == 6)           # On the DTW data, filter only June
+```
+
+## Selecting columns 
+
+- To select specific columns, send a comma separated list of unquoted names
+
+Select specific columns:
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  select(dep_time, arr_time, carrier)
+```
+
+
+Exclude specific columns:
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  select(-year, -tailnum)
+```
+
+
+Select range of columns:
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  select(month:dep_delay)
+```
+
+## Selecting columns: Part 2
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% select(starts_with("d"))
+
+flights %>% select(ends_with("time"))
+
+flights %>% select(contains("arr"))
+
+flights %>% select(-starts_with("d"))
+```
+
+See "?select" for complete list and examples
+
+## Sort data
+
+ - Use arrange() to sort your rows
+ 
+```{r, echo=TRUE, eval=FALSE}
+flights %>% arrange(sched_dep_time)
+```
+
+ - Use desc() to reverse the sort order of a column
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% arrange(month, desc(day))
+```
+
+ - You can sort on functions of variables
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% arrange(desc(dep_time-sched_dep_time))
+```
+
+
+## Create new variables
+
+ - Mutate allows you to create columns using existing values
+ 
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  mutate(speed = distance/(air_time/60)) %>% 
+  arrange(desc(speed)) %>% 
+  select(flight, speed)
+```
+
+ - Remember, changes are not saved to "flights", be sure to save the result if 
+ you want to use it later
+ 
+```{r, echo=TRUE, eval=FALSE}
+new_flights <- flights %>% mutate(…)
+```
+ 
+## Use new variables right away
+
+ - The parameters to mutate are processed in the order they appear
+   - You can use new variables right away
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  mutate( dist_km = distance * 1.61, 
+          hours = air_time / 60, 
+          kph = dist_km/hours ) %>% 
+  select(flight, kph)
+```
+
+ - Be careful! You can overwrite existing variables
+ 
+## Summarize data
+
+ - You generally use summarize() to reduce the number of rows in your data by specifying summary functions for each of the columns
+ 
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  filter(!is.na(arr_delay)) %>% 
+  summarize(avg_arr_delay = mean(arr_delay))
+```
+
+ - Most useful summary functions:
+   - mean(), median(), var(), sd(), min(), max(), first(), last(), 
+   n(), n_distinct()
+
+
+## Summarize data
+
+ - Most useful summary functions:
+   - mean(), median(), var(), sd(), min(), max(), first(), last(), 
+   n(), n_distinct()
+   
+ - exercise: create one statement to calculate the mean and standard deviation
+ for the departure delay (dep_delay()) column
+ 
+```{r, echo=TRUE, eval=FALSE}
+
+
+```
+
+
+## Grouping data
+
+ - Often you want to perform summaries for groups of rows at a time 
+ 
+ - group_by() function allow you to specify columns that define groups
+ 
+ - Functions like mutate() and summarize() are then performed for each group
+ 
+## group_by() + summarize() example
+
+ - Find the average arrival delay for each carrier, where all the missings are 
+ removed from arr_delay
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>%
+  filter(!is.na(arr_delay)) %>% 
+  group_by(carrier) %>%
+  summarize(avg_arr_delay = mean(arr_delay))
+```
+
+ - Exercise: Improve the summary above to only include airlines with a negative mean
+ arrival delay, i.e. the flights are early, on average
+ 
+```{r, echo=TRUE, eval=FALSE}
+
+```
+
+
+## Some special shortcuts
+
+ - count()
+   - count number of rows with unique values of selected columns
+```{r, echo=TRUE, eval=FALSE}
+flights %>% count(carrier)
+```
+
+ - summarize_all()/mutate_all()
+   - apply function to all columns
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  summarize_all(mean, na.rm=T)
+```
+
+ - summarize_at()/mutate_at()
+   - apply function to chosen columns
+
+```{r, echo=TRUE, eval=FALSE}
+flights %>% 
+  summarize_at(vars(ends_with("time")), mean, na.rm=T)
+```
+
+## Summarization exercises
+
+ - What month received the most number of flights to your home/favorite airport?
+ 
+ - What is the average airspeed for all flights?
+ 
+ - What was the average departure delay (for flights that actually had a departure)?
+ 
+ - What was the longest delay for each carrier (which carrier had the longest 
+ delay for a single flight)?
+
+
+## Combining data frames
+
+ - bind_rows()
+   - Stack two data frames on top of each other (should have the same number 
+   of columns)
+
+ - bind_columns() 
+   - Place two data frames next to each other (should have the same number of 
+   rows) – no merge-able columns 
+   
+ - intersect(), union(), setdiff()
+   - For rows shared or exclusive to data frames
+
+## ggplot2
+
+ - Even though the package is sometimes just referred to as "ggplot", 
+ the package name is "ggplot2"
+ 
+ - ggplot is included in the tidyverse package. To load the tidyverse package, 
+ run 
+```{r, echo = TRUE, eval = FALSE}
+library(tidyverse)
+```
+
+ - If you get the message "there is no package 'tidyverse' " you must install it first:
+ 
+```{r, echo = TRUE, eval = FALSE}
+install.packages("tidyverse")
+library(tidyverse) # now load the tidyverse package
+```
+
+## ggplot2 help
+
+ - Use the R help with 
+
+```{r, echo = TRUE, eval = FALSE}
+?ggplot
+```
+
+ - Use the website:  http://ggplot2.tidyverse.org/reference/ 
+ 
+ - Read Hadley's book (ggplot2: Elegant graphics for data analysis)
+ 
+## Gapminder Data
+
+ - Dataset tracking life expectancy and per-capita GDP of 142 countries
+ 
+ - Data reported every five years from 1952-2007
+ 
+ - Data set is available in R package on CRAN:
+   - install.packages("gapminder")
+
+\bigskip
+
+```{r, echo = TRUE, eval = TRUE, message=FALSE}
+#install.packages("gapminder")
+library(gapminder)
+#View(gapminder)    # check out the data, scroll through it
+```
+
+## Create scatterplot
+
+ - Interest in how life expectancy relates to GDP per capita
+   - Does life expectancy increase with per capita GDP?
+
+\bigskip
+
+ - Create a scatterplot of gdpPercap (Y-axis) vs lifeExp (X-axis)
+ 
+\bigskip
+
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 2.5}
+ggplot(data = gapminder, aes(x=gdpPercap, y=lifeExp)) + 
+  geom_point(size = 0.5)
+```
+
+
+## Add some color
+
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 2.5}
+ggplot(data = gapminder, aes(x=gdpPercap, y=lifeExp)) + 
+  geom_point(size = 0.5, color = "blueviolet")
+```
+  
+ - Check out the color names that R knows:
+```{r, echo = TRUE, eval = FALSE}
+colors()
+```
+ - Can also take HEX values, e.g. "#8A2BE2"
+
+
+## Color by the data
+
+Incorporate color into the plot in a useful way:
+
+ - Color by continent to see trends by region of the world
+ 
+\tiny
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+ggplot(data = gapminder, aes(x=gdpPercap, y=lifeExp, color = continent)) + 
+  geom_point(size = 0.5)
+```
+
+
+## Scale point size by data
+
+ - Make countries with larger populations have larger dots
+   - How big are the high GDP countries?
+
+\tiny
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+ggplot(data = gapminder, aes(x=gdpPercap, y=lifeExp, color = continent, size = pop)) + 
+  geom_point()
+```
+
+## Geometries
+
+ - geom_point() is just one of many geometries:
+   - Used to make scatter plots
+   - Works best with two continuous variables
+  
+ - What if we wanted to look at a distribution of a single continuous variable?
+
+\tiny
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+ggplot(data = gapminder, aes(x=lifeExp)) + 
+  geom_histogram()  # function for histograms
+```
+
+
+## Geometries
+
+ - geom_point() is just one of many geometries:
+   - Used to make scatter plots
+   - Works best with two continuous variables
+  
+ - What if we wanted to look at a distribution of a single continuous variable?
+
+\tiny
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+ggplot(data = gapminder, aes(x=lifeExp)) + 
+  geom_density()  # function for smoothed density
+```
+
+
+## Density plot with custom aesthetics
+
+ - Add color fill 
+ 
+\tiny
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+ggplot(data = gapminder, aes(x=lifeExp)) + 
+  geom_density(fill = "firebrick")  # function for smoothed density
+```
+
+## Single variable across groups
+
+ - Plot density over life expectancies by continent
+   - Fill contients with their own color to distinguish them
+   
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+ggplot(data = gapminder, aes(x=lifeExp, fill = continent)) + 
+  geom_density(alpha = 0.2)  # function for smoothed density
+```
+
+## Single variable across groups
+
+ - Another approach to the same problem:
+   - Use boxplots to characterize differences across groups
+   
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+# Notice how aes change
+ggplot(data = gapminder, aes(x=continent, y = lifeExp)) + 
+  geom_boxplot()
+```
+
+
+## Single variable across groups
+
+ - Violin plot:
+ 
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+# Notice how aes change
+ggplot(data = gapminder, aes(x=continent, y = lifeExp)) + 
+  geom_violin()
+```
+
+
+## Stack geometries in layers
+
+ - How can we display the plot with data overlay?
+ 
+```{r, echo = TRUE, eval = TRUE, fig.height = 1.5, fig.width = 3.5}
+# Notice how aes change
+ggplot(data = gapminder, aes(x=continent, y = lifeExp)) + 
+  geom_violin() + 
+  geom_jitter(alpha = 0.2)  # jitter the points
+```
+
 ## Simulation Basics
 
 Why simulate?
@@ -1099,18 +1675,6 @@ We can avoid the for loop with \textbf{replicate()}:
 ```{r, echo=TRUE, eval=FALSE}
 sims = replicate(1000, sim.mean())
 ```
-
-
-## Simulate lm 
-
-Simulate a linear model with two predictors, and then use lm in R to see
-if we recovered the values
-
-Plot
-
-## Bootstrap lm results
-
-
 
 ## Useful R packages
 

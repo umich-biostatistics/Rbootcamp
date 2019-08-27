@@ -82,6 +82,12 @@ for (i in 1:n.sim) {
 my.sims = t(replicate(100, sim.ci(mu=mu, sig=sig, n=n)))
 
 
+## Copy the code above to finish this simulation:
+
+
+
+
+
 # Extra confidence interval examples:
 
 
