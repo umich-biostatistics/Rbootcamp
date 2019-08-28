@@ -1,7 +1,7 @@
 ---
 title: "Rbootcamp/Workshop"
 author: "Michael Kleinsasser"
-date: "8/8/2019"
+date: "8/27/2019"
 output: 
     beamer_presentation:
       theme: "CambridgeUS"
@@ -107,6 +107,7 @@ Obtain a basic working knowledge of R objects and functions,
 \smallskip 
   - How do most modeling functions work in R, and
   - How to inspect structure and content of objects
+  - Data manipulation and visualization
   
 \medskip
 
@@ -413,7 +414,7 @@ Example: Store the vector above and remove the missing values.
 \small
 ```{r, echo=TRUE}
 #incomplete.data = 
-#complete.data = complete.cases(complete.data)
+#complete.data = incomplete.data[complete.cases(incomplete.data)]
 ```
 
 
@@ -447,7 +448,7 @@ m = matrix(data, nrow, ncol, byrow, dimnames)
 
 - \textbf{data} is the input vector which becomes the data elements of the matrix
 - \textbf{nrow, ncol} is the number of rows/columns to be created
-- \textbf{byrow} is a logical clue. If TRUE then the input vector elements are arranged by row
+- \textbf{byrow} is T/F. If TRUE then the input vector elements are arranged by row
 - \textbf{dimnames} is the names assigned to the rows and columns
 
 ## Matrix examples:
@@ -494,7 +495,7 @@ The \textbf{data.frame} is the most common way to store and work with data in R
 
 Composed of a list of equal length atomic vectors (can be of any type)
 
-Example: 
+Exercise: 
 
 \small The following are data on students in the class:
 
@@ -503,6 +504,11 @@ Example:
 - \small First Name (character):  Mike Dan   Sara  Karen
 
 Convert to three atomic vectors of appropriate type.
+
+```{r, echo=TRUE, eval=FALSE}
+#insert solution
+```
+
 
 ## data.frame examples
 
@@ -537,12 +543,18 @@ dat$GPA
 
 Another example: ToothGrowth data.
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, eval = FALSE}
 ToothGrowth$len
 ```
 
+Exercise: Add a new column to the data.frame dat with NAs
 
-## data.frame
+```{r, echo=TRUE, eval=FALSE}
+# Hint: = NA will recycle NA to the appropriate length
+```
+
+
+## Preview data.frame
 
 Preview head (first few rows) of data.frame:
 
@@ -619,6 +631,24 @@ pow <- function(base, expon) { # power function
 pow(5, 2)
 pow(10, 3)
 ```
+
+## R functions: 
+
+\small R function syntax:
+
+\small NAME <- function(ARG1, ARG2, ARG3) { \newline
+\small \hspace*{20pt} DO SOMETHING \newline
+\small \hspace*{20pt} STORE RESULT \newline
+\small \hspace*{20pt} return(RESULT) \newline
+\small }
+
+Exercise: Write a function that calls the pow() function and returns a list 
+of base taken to the powers 2, 4, and 8.
+
+```{r , echo = TRUE}
+# Hint: create list with list(pow2 = , pow4 = , pow8 = )
+```
+
 
 ## Common R functions
 
@@ -813,7 +843,7 @@ install.packages("tidyverse")
 Load into memory:
 
 ```{r, echo=TRUE, eval=FALSE}
-library(purrr)
+library(tidyverse) # actually a set of packages
 ```
 
 
@@ -830,28 +860,9 @@ library(purrr)
 
 ## Basic workflow for statistical analysis
 
-\begin{columns}[T] % align columns
-\begin{column}{.36\textwidth}
-
-\begin{itemize}
-\setlength\itemsep{1em}
-
-\item Workshops throughout semester on different areas
-
-\item Emphasis placed on tidyverse
-
-
-\end{itemize}
-
-
-\end{column}%
-\hfill%
-\begin{column}{.62\textwidth}
 
 \includegraphics[width = 3in]{analysis_in_r2.png}
 
-\end{column}%
-\end{columns}
 
 ## What is the tidyverse?
 
@@ -1676,24 +1687,22 @@ We can avoid the for loop with \textbf{replicate()}:
 sims = replicate(1000, sim.mean())
 ```
 
-## Useful R packages
+## Open the simulation exercises
 
-What about working with data and plotting in R?
-\medskip
+ - Go to course file and open the simulation exercises
+ 
+ - Skip the reading for now, do the problems in order
+ 
+ - Recommendation: for each solution you produce,
+ 
+```{r, echo = TRUE, eval = FALSE}
+sim = replicate(1000,
+                {
+                  isert simulation here
+                })
 
-- Don't bother with base R, learn these:
+hist(sim) 
+```
 
-\medskip
-- ggplot2 - Best package for plotting data
-  - getting started: 
-  
-\medskip
-- dplyr - Best package for manipulating/processing data
-  - getting started:
-  
-  
-## Future bootcamps 
+ - this will indicate if you solution is biased (ie trends away from the true value, which I give you)
 
-- dplyr: date ____
-
-- ggplot2: date ____
