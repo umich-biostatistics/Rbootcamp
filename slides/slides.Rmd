@@ -72,7 +72,7 @@ Go to Rstudio cloud to follow along:
 
 - If you have Rstudio/R, open that
 
-- Recommended: Install R/Rstudio for days 2, 3
+- Recommended: Install R/Rstudio asap
 
 - See course materials for download instructions
 
@@ -374,7 +374,7 @@ To create an atomic vector, use c() function:
 c(3.145, 2.18, 9.98e3, 0.05)
 ```
 
-Example: create empty character vector of length 3 and story your full name
+Example: create empty character vector of length 3 and store your full name
 
 ```{r, echo=TRUE}
 vector(mode = "character", length = 3)
@@ -1557,15 +1557,63 @@ ggplot(data = gapminder, aes(x=continent, y = lifeExp)) +
   geom_jitter(alpha = 0.2)  # jitter the points
 ```
 
+## Day 3
+
+If you were not present for Days 1 and 2
+
+ - Go to https://github.com/mkleinsa/Rbootcamp
+ 
+ - Click Clone or download
+ 
+ - Download .zip archive
+ 
+ - extract to desktop, open slides/slides.Rmd to follow along
+ 
+ - Cntrl + f search "Day 3" to find today's slides
+ 
 ## Simulation Basics
 
 Why simulate?
 
   - confirm model/method works by mimicking the real world
+  
+  - Get intuition before writing a proof
+  
+  - *Closed form solution does not exist, only option to simulate
+  
+\bigskip
 
-Sampling in R from sets and distributions:
+Challenge in figuring out how to model real world processes with numbers
+and variables
 
-Simulate a coin toss experiment:
+\bigskip
+
+Note: randomness in R is pseudo-random. The default random number generator depends
+on a seed which is some initial starting value where random numbers grow from.
+Always set a seed.
+
+## Simulation Basics
+
+ - Often interested in expected values of random variables or probability of events 
+ occuring
+
+\bigskip
+  
+ - Through simulation, we don't calculate these values directly. 
+
+Instead:
+
+ 1. Create a sample with the given constraints
+ 2. From sample, calculate the mean over the random draws to estimate expected value,
+    or, calculate an observed frequency to estimate the probability.
+
+## Simulation Basics
+
+Sampling in R from sets:
+
+ - Use the sample() function to sample from a discrete set
+
+Example - Simulate a coin toss experiment:
 
   - toss a coin ten times, record what side it lands on each time
   
@@ -1653,18 +1701,34 @@ n.girls=rbinom(n.sims,400,0.488)
 hist(n.girls)
 ```
  
+## Some simple simulations
 
-## Simulation: Confidence intervals
+ - Exercise: calculate the expected number of girls born.
 
-Open simulations.R script in course files
+```{r, echo=TRUE, eval=FALSE}
+# estimate expected value by computing the mean over all 
+# draws
+sum(n.girls)/n.sims
+```
 
-\bigskip
+ - Does your estimate of the expected number of girls born make sense?
+Check:
 
-Exercise: Is the coverage rate of confidence intervals for the mean accurate?
+```{r, echo=TRUE, eval=FALSE}
+# expected value of a binomial r.v. is n*p
+n.sims*0.488
+```
 
- - Given conditions similar to ours, does our method for generating confidence intervals capture the true value 95% of the time?
 
-\includegraphics[width = 3in]{CI_coverage_example.JPG}
+ - Exercise: calculate the probability that the number of girls born will exceed
+half the total population size.
+
+```{r, echo=TRUE, eval=FALSE}
+# estimate the probability by calculculating the desired 
+# frequency 
+sum(n.girls > 200)/n.sims
+```
+
 
 ## Replicate for repeating simulations
 
@@ -1687,22 +1751,41 @@ We can avoid the for loop with \textbf{replicate()}:
 sims = replicate(1000, sim.mean())
 ```
 
-## Open the simulation exercises
+## Replicate example
 
- - Go to course file and open the simulation exercises
- 
- - Skip the reading for now, do the problems in order
- 
+\small
+
  - Recommendation: for each solution you produce,
  
 ```{r, echo = TRUE, eval = FALSE}
 sim = replicate(1000,
                 {
-                  isert simulation here
+                  isert simulation code here
                 })
-
-hist(sim) 
 ```
 
- - this will indicate if you solution is biased (ie trends away from the true value, which I give you)
+Example: use the sample() function to draw a collection of M/F values where the 
+probability of F is 0.75. What is the probability of getting more males than females
+in a set of 10 random people?
 
+```{r, echo = TRUE, eval = FALSE}
+experiment = replicate(1000, {
+                      mydraw = sample(c("M","F"), 10, replace = T,
+                                     prob = c(0.25,0.75))
+                      sum(mydraw=="M") > sum(mydraw == "F")
+                    })
+mean(experiment)
+```
+
+
+## Simulation: Confidence intervals
+
+Open simulations.R script in course files
+
+\bigskip
+
+Exercise: Is the coverage rate of confidence intervals for the mean accurate?
+
+ - Given conditions similar to ours, does our method for generating confidence intervals capture the true value 95% of the time?
+
+\includegraphics[width = 3in]{CI_coverage_example.JPG}
