@@ -45,16 +45,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Goals (roughly):
 
- - Day 1: Setting up and using R interactively, syntax and data types, creating viewing and removing objects, on-line help, writing functions, how most statistical procedures are implemented in R
+ - Day 1: Setting up and using R interactively via Rstudio. Basic syntax and data types. Creating, viewing, and removing objects. The on-line help. Writing R functions. How most statistical procedures are implemented in R
  
- - Day 2: Non-interactive R and the cluster. How to write optimized code, including vectorization and loops, and introduction to data manipulation with dplyr, and visualization with ggplot2
+ - Day 2: Using R non-interactively on a cluster. How to write optimized code, including vectorization and loops. Introduction to data manipulation with dplyr and visualization with ggplot2
  
- - Day 3: Finally we combine our knowledge and apply it to a series of simulation problems
+ - Day 3: Finally, we combine our knowledge and apply it to a series of simulation problems
 
 
 ## Materials
 
-- All bootcamp materials online at https://github.com/umich-biostatistcs/Rbootcamp
+- All bootcamp materials online at https://github.com/umich-biostatistics/Rbootcamp
 
   - Handouts with examples to work through
 
@@ -70,7 +70,7 @@ Go to Rstudio cloud to follow along:
 
 - Follow along by typing commands in my slides
 
-- If you have Rstudio/R, open that
+- If you have Rstudio/R, open the .Rmd to follow along
 
 - Recommended: Install R/Rstudio asap
 
@@ -120,8 +120,10 @@ Obtain a basic working knowledge of R objects and functions,
 
 Either "interactively" or "non-interactively"
 
- - Interactive R: 
- - For line by line code execution 
+Interactive R: 
+
+ - For line-by-line code execution 
+ - Useful for data exploration, debugging, etc.
  - Open the Rgui.exe or 
  - Open Rstudio.exe (recommended) - integrated developement environment for R
  
@@ -132,6 +134,8 @@ Non-interactively:
   
 ## Use R as a calculator
 
+\small
+
 Standard operations: 
 
 ```{r , echo = TRUE}
@@ -141,8 +145,9 @@ Standard operations:
 ( (pi - 3.14) / (3.14) )  * 100
 ```
 
-\includegraphics[width = 2in]{calculator.JPG}
+ - Can do anything your Ti84 does, and then some
 
+\includegraphics[width = 2in]{calculator.JPG}
 
 ## Operators: arithmetic and logical
 
@@ -194,8 +199,11 @@ isTRUE(x) & is x TRUE
 
 Test if these two expressions are equivalent in R:
 
+ - use Ctrl + Enter to execute each desired line
+ 
 ```{r, echo=TRUE, eval=FALSE}
 A = c(TRUE, TRUE, FALSE); B = c(FALSE, FALSE, TRUE)
+
 # Expression 1:
 A | B
 
@@ -208,7 +216,7 @@ all.equal(A | B, !(A == B))
 
 ## Operators and vectorization
 
-Arithmetic/logical operators are \textbf{vectorized}:
+Arithmetic/logical operators are \textbf{vectorized}: vector in -> vector out
 
 Given these vectors:
 ```{r, eval=TRUE}
@@ -327,7 +335,7 @@ Other help...
 
 ## Objects in R
 
-Objects (data, model output, functions)
+Objects can be data, model output, functions
 
  - Characterized by their \textbf{names} and \textbf{content}
  
@@ -339,6 +347,15 @@ x = 25
 mode(x)
 length(x)
 ```
+
+\small
+
+Example: What are the mode and length of this object?
+
+```{r, echo=TRUE, eval = FALSE}
+l = c(3-2i, 5+2i, 8-2i)
+```
+
 
 
 ## Basic data "modes" in R
@@ -372,6 +389,12 @@ To create an atomic vector, use c() function:
 
 ```{r, echo=TRUE}
 c(3.145, 2.18, 9.98e3, 0.05)
+```
+
+Example: Store the above numeric vector by assinging it a name
+
+```{r, echo=TRUE, eval=FALSE}
+
 ```
 
 Example: create empty character vector of length 3 and store your full name
@@ -613,6 +636,47 @@ attributes(ToothGrowth)
 ```
 
 
+## access elements of different data types
+
+\small
+
+Access elements of any...
+
+ 1. vector: [index]
+ 
+```{r, echo=TRUE, eval=FALSE}
+dose1 = ToothGrowth$dose
+does1[3]
+```
+
+ 2. matrix: [row index, col index]
+
+```{r, echo=TRUE, eval=FALSE}
+P[2,2]
+```
+
+ 3. list: [[index]]
+ 
+```{r, echo=TRUE, eval=FALSE}
+ToothGrowth[[1]]
+# data.frames are technically lists
+# can you identify what this is?
+```
+
+ 4. data.frame: $name
+
+```{r, echo=TRUE, eval=FALSE}
+ToothGrowth$dose
+```
+
+## Summary of data types
+
+ - Create objects having different data types
+ 
+ - Combine those into data structures
+ 
+ - access elements of interest
+
 ## R functions
 
 \small R function syntax:
@@ -647,6 +711,45 @@ of base taken to the powers 2, 4, and 8.
 
 ```{r , echo = TRUE}
 # Hint: create list with list(pow2 = , pow4 = , pow8 = )
+```
+
+## R functions: exercises
+
+\small
+
+Write a function that takes no arguments and adds 1 to 'a' if it exists, 
+or sets a = 1 if it does not exist. exists() returns TRUE if its argument exists 
+in memory and zero else.
+
+```{r, echo=TRUE, eval=FALSE}
+# Here is a template to start with
+add1 = function() {
+  if(# test if a does NOT exist) {
+    # set a equal to 1
+  } else {
+    # add one to a
+  }
+  
+  return(#return the correct object)
+}
+```
+
+
+## R functions: exercises
+
+\small
+
+Does your function work? Test it with the following scenarios.
+
+```{r, echo=TRUE, eval=FALSE}
+# Run add1(), should return 1
+
+
+# Set a = 5, add1() should return 6
+
+
+# Set a = -1, add1() should return 0
+
 ```
 
 
