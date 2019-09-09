@@ -1,7 +1,7 @@
 ---
 title: "Rbootcamp/Workshop"
 author: "Michael Kleinsasser"
-date: "8/27/2019"
+date: "9/9/2019"
 output: 
     beamer_presentation:
       theme: "CambridgeUS"
@@ -49,6 +49,24 @@ knitr::opts_chunk$set(echo = FALSE)
 
  - Some details of data structures and getting help
  
+ - After slides: practice using lab#0 script and data set
+   - The end of that script contains some exercises
+ 
+ 
+## R Basics: Big Picture
+
+ - R is a sophisticated calculator for statistics
+
+Chambers (2016) Extending R:
+
+ - Everything that exists in R is an object
+ - Everything that happens in R is a function call
+ 
+Obtain a basic working knowledge of R objects and functions, 
+
+ - Google the rest!
+ 
+ 
  
 ## Use R as a calculator
 
@@ -89,6 +107,14 @@ library(readr)
 library(dplyr)
 ```
 
+Now, we can use the functions from those packages:
+
+```{r, echo=TRUE, eval = FALSE}
+mutate() # from dplyr
+
+read_csv() # from readr
+```
+
 ## Example data for this tutorial
 
 The Effect of Vitamin C on Tooth Growth in Guinea Pigs:
@@ -114,6 +140,8 @@ For this tutorial we use the ToothGrowth data set:
 
 ```{r, echo=TRUE, eval = FALSE}
 ToothGrowth = read.csv("./slides/ToothGrowth.csv")
+ToothGrowth = read.csv("slides/ToothGrowth.csv")
+ToothGrowth = read.csv("ToothGrowth.csv")
 ```
 
 ## Create object
@@ -272,7 +300,7 @@ hist(ToothGrowth$len, main="Histogram for Length",
 ```
 
 
-The distribution for Age can also be viewed using a boxplot:
+The distribution for Length can also be viewed using a boxplot:
 
 ```{r, echo=TRUE, eval = FALSE}
 boxplot(, ylab="Length")   # insert the correct object
@@ -325,7 +353,7 @@ Copy on modify. Can also make a new copy and resave with the same name,
 thus overwriting the original data:
 
 ```{r, echo=TRUE, eval = FALSE}
-ToothGrowth = rename(ToothGrowth, supplement=supp)
+#ToothGrowth = rename(ToothGrowth, supplement=supp)
 ```
 
 
@@ -527,4 +555,7 @@ What have we learned?
  - Inspect the results
 
 Questions?
+
+ - Open the lab#0 and run through the script with a data set
+   - Do the exercises at the end
 
