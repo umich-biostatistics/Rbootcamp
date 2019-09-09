@@ -124,8 +124,8 @@ Interactive R:
 
  - For line-by-line code execution 
  - Useful for data exploration, debugging, etc.
- - Open the Rgui.exe or 
- - Open Rstudio.exe (recommended) - integrated developement environment for R
+ - Open the Rgui.exe (on Windows) or 
+ - Open Rstudio (recommended) - integrated developement environment for R
  
 Non-interactively:
 
@@ -188,7 +188,7 @@ x|y & x OR y \\
 x\&y & x AND y \\
 isTRUE(x) & is x TRUE 
 \end{tabular}
-\caption{Logical Operators}
+\caption{Relational/Logical Operators}
 \end{table}
 
 \end{column}%
@@ -530,6 +530,7 @@ Convert to three atomic vectors of appropriate type.
 
 ```{r, echo=TRUE, eval=FALSE}
 #insert solution
+
 ```
 
 

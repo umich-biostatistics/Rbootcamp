@@ -1,0 +1,530 @@
+---
+title: "Rbootcamp/Workshop"
+author: "Michael Kleinsasser"
+date: "8/27/2019"
+output: 
+    beamer_presentation:
+      theme: "CambridgeUS"
+      colortheme: "dolphin"
+      fonttheme: "structurebold"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Mike's Personal Introduction
+
+\begin{columns}[T] % align columns
+\begin{column}{.48\textwidth}
+
+\begin{itemize}
+\setlength\itemsep{1em}
+
+\item R programmer for the Department of Biostatistics
+
+\item Write and mantain R packages for faculty and students
+
+\item Consult faculty and students on writing R packages, optimization
+
+\end{itemize}
+
+
+\end{column}%
+\hfill%
+\begin{column}{.48\textwidth}
+
+\includegraphics[width = 2in]{personal_picture.jpg}
+
+\end{column}%
+\end{columns}
+
+
+## Rbootcamp Introduction
+
+ - Load, view, manipulate a data set
+ 
+ - Apply to modeling functions, inspect outputs
+
+ - Some details of data structures and getting help
+ 
+ 
+## Use R as a calculator
+
+\small
+
+Standard operations: 
+
+```{r , echo = TRUE}
+# multiply *, divide /, add + subtract - 
+18056.983 - 1005.118 + 22.53
+
+( (pi - 3.14) / (3.14) )  * 100
+```
+
+ - Can do anything your Ti84 does, and then some
+
+\includegraphics[width = 2in]{calculator.JPG}
+
+
+## Using R's sophisticated functions
+
+How is R extended beyong basic calculator functionality?
+
+MANY functions to carry out statistical analyses have been implemented.
+
+To use these packages, you need to install, load and attach them:
+
+```{r, echo=TRUE, eval = FALSE}
+install.packages("readr")   # read text data
+install.packages("dplyr")   # manipulate data
+```
+
+
+Load the packages into your R session:
+
+```{r, echo=TRUE, eval = FALSE}
+library(readr)
+library(dplyr)
+```
+
+## Example data for this tutorial
+
+The Effect of Vitamin C on Tooth Growth in Guinea Pigs:
+
+The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, orange juice or ascorbic acid (a form of vitamin C and coded as VC).
+
+Format:
+ - A data frame with 60 observations on 3 variables.
+
+ - [,1]	len	numeric	Tooth length
+ - [,2]	supp	factor	Supplement type (VC or OJ).
+ - [,3]	dose	numeric	Dose in milligrams/day
+
+## Read in data
+
+For this tutorial we use the ToothGrowth data set:
+
+ - Two ways to read in data:
+ 
+  1. Point and click in RStudio << Do this for now (easy)
+  
+  2. read.csv()
+
+```{r, echo=TRUE, eval = FALSE}
+ToothGrowth = read.csv("./slides/ToothGrowth.csv")
+```
+
+## Create object
+
+Create object with "assign" operator
+
+ - arrow then minus sign  <-
+ - single equal sign      =
+
+```{r asignment, echo=TRUE, eval = FALSE}
+ToothGrowth <- read.csv("./slides/ToothGrowth.csv")
+
+# equivalently
+ToothGrowth = read.csv("./slides/ToothGrowth.csv")
+```
+
+Note that ToothGrowth is an arbitrary name. I can choose whatever name I desire. 
+Choose names that help you remember what the object is. 
+
+## Inspect the data
+
+The first step with any data you encounter is to view the dataset and take a 
+look at what type of information is contained within.  
+
+To do that, use the  
+'View' function.  Note that this function, unlike most other R function, is 
+capitalized. 
+
+```{r, echo=TRUE, eval = FALSE}
+View(ToothGrowth)
+```
+
+View is a good way to spot check your work!
+
+
+## Useful functions for inspecting your data
+
+First, let's see how many observations and variables are contained in 
+the dataset. The 'dim' function will return two numbers: the first is the number of rows
+(observations) and the second is the number of columns (variables)
+
+```{r, echo=TRUE, eval = FALSE}
+# insert the object to get 'dimension' of
+dim()
+```
+
+
+## Useful functions for inspecting your data
+
+Dig deeper into the data. Recall, each row is an observation (Guinea Pig).
+Columns are variables, e.g. what we measured on each pig.
+
+ - We need to know what kind of data these columns contain
+
+ - Next slide has some classes of data:
+
+
+## Classes of ToothGrowth
+
+The classes of variables (columns of data):
+
+- numeric, comes in two flavors: integer, numeric
+- character
+- logical 
+- complex
+- factor
+
+```{r, echo=TRUE, eval = FALSE}
+class(ToothGrowth$len)
+class(ToothGrowth$supp)
+class(ToothGrowth$dose)
+```
+
+Note: The modeling functions you use will care what data types you send in
+
+
+## Classes of ToothGrowth, in detail
+
+
+```{r, echo=TRUE, eval = FALSE}
+class(ToothGrowth$len)
+```
+
+Tooth cell length is 'numeric', meaning meaning R is treating it as a continuous 
+numeric variable
+
+```{r, echo=TRUE, eval = FALSE}
+class(ToothGrowth$supp)
+```
+
+Supplement type is a 'factor', indicating that R is treating 
+supp as a categorical variable (restricted set of levels, unordered)
+
+```{r, echo=TRUE, eval = FALSE}
+class(ToothGrowth$dose)
+```
+
+## Inspect types of data in ToothGrowth
+
+We saw the classes of the columns (variables) of ToothGrowth
+
+But what about the object ToothGrowth itself? Find out what it is:
+
+
+```{r, echo=TRUE, eval = FALSE}
+class()  # insert the correct object. 
+```
+
+How do these objects work?
+
+
+## The data.frame
+
+The \textbf{data.frame} is the most common way to store and work with data in R
+
+ - Not surprising: they are designed for this purpose
+
+ - Most modeling functions work on data.frames
+
+Composed of a 'list' of equal length atomic vectors (can be of any type,
+but within the vector each element must be of the same type)
+
+```{r, echo=TRUE, eval = FALSE}
+# look at the top of the data.frame (first few rows):
+head(ToothGrowth)
+
+# bottom
+tail(ToothGrowth)
+```
+
+
+## Working with data set: simple summaries
+
+Now that we have taken a surface glance at the dataset, let's look deeper into
+some of the variables in the data.  
+
+One important statistic to find for variables is the sample average (mean).  
+
+Let's start out by finding the mean for the response 'tooth cell length'.
+
+```{r, echo=TRUE, eval = FALSE}
+ToothGrowth$len # This call returns the vector of length data
+
+# Pass length data into the function 'mean'
+mean(ToothGrowth$len)  # returns sample mean
+```
+
+
+## Working with data set: simple summaries
+
+Next, create a histogram to see the distribution of the length variable  
+
+```{r, echo=TRUE, eval = FALSE}
+hist(ToothGrowth$len, main="Histogram for Length", 
+     xlab="Length", col="gray")
+```
+
+
+The distribution for Age can also be viewed using a boxplot:
+
+```{r, echo=TRUE, eval = FALSE}
+boxplot(, ylab="Length")   # insert the correct object
+```
+
+
+
+## Working with data set: simple summaries
+
+Histograms and boxplots are used for numeric variables such tooth length.
+
+The dataset also contains categorical varaibles as well, for example supplement (supp)
+
+First, view the levels for the supp variable:
+
+```{r, echo=TRUE, eval = FALSE}
+levels(ToothGrowth$supp)
+```
+
+Create a table with counts for each level of the categorical variable using 
+the table function:
+
+```{r, echo=TRUE, eval = FALSE}
+table(ToothGrowth$supp)
+```
+
+A barchart is used to visualize counts for the categorical variable:
+Note that the col argument lets you change the colors of each bar
+
+```{r, echo=TRUE, eval = FALSE}
+barplot(table(ToothGrowth$supp), col=c("red", "blue"))
+```
+
+
+## Working with data set: manipulate data
+
+The variable names that come with a dataset can often be cumbersome.
+
+We can rename a variable to something simpler and more intuitive using the
+rename function. The example below changes the variable name from 
+"supp" to "supplement."
+
+```{r, echo=TRUE, eval = FALSE}
+ToothGrowth2 = rename(ToothGrowth, supplement=supp)
+```
+
+Note: saved this as ToothGrowth2 to make explicit something in R:
+
+Copy on modify. Can also make a new copy and resave with the same name,
+thus overwriting the original data:
+
+```{r, echo=TRUE, eval = FALSE}
+ToothGrowth = rename(ToothGrowth, supplement=supp)
+```
+
+
+## Working with data set: manipulate data
+
+We can create new variables in the dataset using the mutate function.
+
+Imagine that we would like to indicate pigs who were given a dose level
+greater than 0.5. Might do this because the client asked whether there is 
+a difference in tooth cell length comparing dose = 0.5 to dose > 0.5.
+
+We will create a new variable called 'dose_gr05' that is '1' if the dose is over .5 and '0' if dose is equal to 0.5.
+
+```{r, echo=TRUE, eval = FALSE}
+ToothGrowth <- mutate(ToothGrowth, dose_gr05=ifelse(dose>0.5,1,0))
+View(ToothGrowth)
+```
+
+Note: We used the 'ifelse' function to create the new variable.  
+
+This function takes three arguments:
+ 1. The logical expression (here, if dose > 0.5),
+ 2. the value if the expression is TRUE (here, 1)
+ 3. and the value if the expression is false (here 0).
+ 
+
+## Common R functions
+
+\small R has a huge collection of packages:
+
+\small  - 6,000+ packages for data analysis build (on CRAN alone)
+
+\small Example: lm (linear models)
+
+\small - Use ?lm to read help documentation 
+
+\includegraphics[width = 3in]{lm_help.PNG}
+
+
+
+## Fit a linear model with lm
+
+- Use built-in data set ToothGrowth
+
+- ?ToothGrowth for help:
+
+\includegraphics[width = 3in]{quesToothGrowth.JPG}
+
+
+
+## Using lm() function for linear models
+Call lm on the data and formula, store result "lm" object:
+```{r, echo = TRUE, eval = TRUE}
+tooth_fit = lm(formula = len ~ supp + dose, 
+               data = ToothGrowth)
+```
+
+Formulas in R:
+```{r, echo = TRUE, eval = FALSE}
+len ~      # Response column name, ~ for "="
+  supp +   # First predictor name + for "+"
+  dose     # second predictor name
+```
+
+
+Many R functions use the formula argument.
+
+## Getting detailed information
+
+\small
+Basic "print" of model:
+\tiny
+```{r, echo = TRUE, eval = TRUE}
+print(tooth_fit)     # equivalent to tooth_fit
+```
+\small
+Detailed summary:
+\tiny
+```{r, echo = TRUE, eval = TRUE}
+summary(tooth_fit)
+```
+
+
+
+## Understanding R classes
+
+- What is this thing?
+```{r, echo = TRUE, eval = FALSE}
+class(tooth_fit)
+```
+- What are the methods for this object?
+```{r, echo = TRUE, eval = FALSE}
+methods(class = "lm")
+```
+- What is its structure? (i.e., what's in it)
+```{r, echo = TRUE, eval = FALSE}
+str(tooth_fit)
+```
+
+## Understanding R classes
+
+- What is this thing?
+```{r, echo = TRUE, eval = TRUE}
+class(tooth_fit)
+```
+
+## Understanding R classes
+\small
+- What are the methods for this object?
+```{r, echo = TRUE, eval = TRUE}
+methods(class = "lm")
+```
+
+## Understanding R classes
+
+\tiny
+- What is its structure? (i.e., what's in it)
+```{r, echo = TRUE, eval = TRUE}
+str(tooth_fit)
+```
+
+## Understanding R classes
+
+- Pull something out of the "lm" fit object:
+
+\tiny
+```{r, echo = TRUE, eval = TRUE}
+tooth_fit$fitted.values        # y_hat's for the linear model
+```
+
+## Extracting data from model objects
+
+Some generic extraction methods: 
+
+```{r, echo = TRUE, eval = FALSE}
+coef(tooth_fit)            # model coefficients
+
+coef(summary(tooth_fit))   # adds test statistics, p-values
+
+vcov(tooth_fit)            # variance/covariance matrix
+```
+
+Note: depending on implementation, these may not be available
+- Check methods with "methods(object)" before attempting
+
+## Extracting data from model objects (in detail)
+
+Extract coefficients, test stats, and p-values
+```{r, echo = TRUE, eval = TRUE}
+coef(summary(tooth_fit))   # adds test statistics, p-values
+```
+
+
+## Predict new values
+
+- predict() function is generic and works with many models
+
+- Pass in a new data.frame with the same column names:
+
+```{r, echo = TRUE, eval = TRUE}
+to_predict = data.frame(dose = 0.5, supp = "VC")
+```
+
+```{r, echo = TRUE, eval = TRUE}
+predict(tooth_fit, newdata = to_predict)
+```
+
+
+## Predict new values (example 2)
+
+- predict() function is generic and works with many models
+
+- Pass in a new data.frame with the same column names:
+
+\small
+```{r, echo = TRUE, eval = TRUE}
+to_predict = data.frame(dose = seq(0,1,0.1), supp = "OJ")
+```
+
+```{r, echo = TRUE, eval = TRUE}
+predict(tooth_fit, newdata = to_predict)
+```
+
+
+## Summary
+
+What have we learned?
+
+ - Read in some data
+ 
+ - Work with it
+ 
+ - What is it?
+ 
+ - Manipulate it
+ 
+ - Fit a model to it
+ 
+ - Inspect the results
+
+Questions?
+
