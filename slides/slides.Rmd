@@ -1262,14 +1262,14 @@ flights %>%                 # data
  
 ```{r, echo=TRUE, eval=FALSE}
 flights %>%                 # data
-  filter(carrier == "AA" & month == 6)   # filter DTW as dest.
+  filter(dest == "DTW" & month == 6)   # filter DTW as dest.
 ```
 
 Equivalently:
 
 ```{r, echo=TRUE, eval=FALSE}
 flights %>%                 # data
-  filter(carrier == "AA") %>%  # filter DTW as dest.
+  filter(dest == "DTW") %>%  # filter DTW as dest.
   filter(month == 6)           # On the DTW data, filter only June
 ```
 
@@ -1390,7 +1390,7 @@ flights %>%
    n(), n_distinct()
    
  - exercise: create one statement to calculate the mean and standard deviation
- for the departure delay (dep_delay()) column
+ for the departure delay (dep_delay) column
  
 ```{r, echo=TRUE, eval=FALSE}
 
