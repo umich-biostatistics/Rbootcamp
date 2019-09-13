@@ -91,10 +91,21 @@ my.sims = t(replicate(100, sim.ci(mu=mu, sig=sig, n=n)))
 # Extra confidence interval examples:
 
 
-# Consider a population that is normally distributed with ?? = 3.84 and ?? = 1.6. 
+# Consider a population that is normally distributed with mu = 3.84 and sigma = 1.6. 
 # How reliable is the ``large'' sample 90% confidence interval when applied to samples 
 # of only 4 observations? How reliable is this procedure when a sample has 12 observations? 
 # To check the reliability, generate 1000 confidence intervals as in Sec. 7.3 and count the 
 # ``bad fraction.'' A reliable 90% confidence interval should have a bad fraction around .10.
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -1102,6 +1102,7 @@ Sometime you just need loops:
 
 ```{r, echo = TRUE, eval = FALSE}
 N = 20
+set.seed(7794)
 for (i in 2:30) {
   f = rpois(1, 0.15*N[i-1])   # births
   d = rbinom(1, N[i-1], 0.1)  # deaths
@@ -1251,7 +1252,7 @@ These functions, called "verbs" are:
 Example: 
 
 ```{r, echo=TRUE, eval=FALSE}
-flights %>%                 # data
+flightaa = flights %>%                 # data
   filter(carrier == "AA")   # apply verb
 ```
 
@@ -1268,7 +1269,7 @@ flights %>%                 # data
 Equivalently:
 
 ```{r, echo=TRUE, eval=FALSE}
-flights %>%                 # data
+fd6 = flights %>%                 # data
   filter(dest == "DTW") %>%  # filter DTW as dest.
   filter(month == 6)           # On the DTW data, filter only June
 ```
@@ -1340,10 +1341,10 @@ flights %>% arrange(desc(dep_time-sched_dep_time))
  - Mutate allows you to create columns using existing values
  
 ```{r, echo=TRUE, eval=FALSE}
-flights %>% 
+View(flights %>% 
   mutate(speed = distance/(air_time/60)) %>% 
   arrange(desc(speed)) %>% 
-  select(flight, speed)
+  select(flight, speed))
 ```
 
  - Remember, changes are not saved to "flights", be sure to save the result if 
@@ -1393,7 +1394,15 @@ flights %>%
  for the departure delay (dep_delay) column
  
 ```{r, echo=TRUE, eval=FALSE}
+flights %>% filter(!is.na(dep_delay)) %>% select(dep_delay) %>%
+  summarise(mean_dep_delay = mean(dep_delay))
 
+flights %>% select(dep_delay) %>%
+  filter(!is.na(dep_delay)) %>%
+  summarise(mean_dep_delay = mean(dep_delay))
+
+flights %>% select(dep_delay) %>%
+  summarise(mean_dep_delay = mean(dep_delay, na.rm = TRUE))
 
 ```
 
@@ -1415,7 +1424,8 @@ flights %>%
 flights %>%
   filter(!is.na(arr_delay)) %>% 
   group_by(carrier) %>%
-  summarize(avg_arr_delay = mean(arr_delay))
+  summarize(avg_arr_delay = mean(arr_delay)) %>%
+  arrange(desc(avg_arr_delay))
 ```
 
  - Exercise: Improve the summary above to only include airlines with a negative mean
@@ -1453,14 +1463,38 @@ flights %>%
 ## Summarization exercises
 
  - What month received the most number of flights to your home/favorite airport?
- 
+```{r}
+# flights %>% select(dest, month) %>%
+#   filter(dest == "SFO") %>%
+#   group_by(month) %>%
+#   summarise(count = n()) %>%
+#   arrange(desc(count))
+# 
+# 
+# flights %>% select(dest, month) %>%
+#   filter(dest == "SFO") %>%
+#   group_by(month) %>%
+#   arrange(desc(n()))
+
+  #%>%
+#  arrange(desc())
+#%>%
+#  arrange(desc())
+```
+
  - What is the average airspeed for all flights?
- 
+```{r}
+
+```
  - What was the average departure delay (for flights that actually had a departure)?
- 
+```{r}
+
+```
  - What was the longest delay for each carrier (which carrier had the longest 
  delay for a single flight)?
+```{r}
 
+```
 
 ## Combining data frames
 
@@ -1820,7 +1854,7 @@ Check:
 
 ```{r, echo=TRUE, eval=FALSE}
 # expected value of a binomial r.v. is n*p
-n.sims*0.488
+400*0.488
 ```
 
 
@@ -1873,7 +1907,7 @@ probability of F is 0.75. What is the probability of getting more males than fem
 in a set of 10 random people?
 
 ```{r, echo = TRUE, eval = FALSE}
-experiment = replicate(1000, {
+experiment = replicate(100000, {
                       mydraw = sample(c("M","F"), 10, replace = T,
                                      prob = c(0.25,0.75))
                       sum(mydraw=="M") > sum(mydraw == "F")
